@@ -1,6 +1,8 @@
 import React from 'react';
+import {Link} from "react-router-dom";
 
 const Product = (props) => {
+    
     return (
         <div className="col-md-4 mb-3 text-center">
             <div className="card">
@@ -10,10 +12,9 @@ const Product = (props) => {
                     <p className="card-text">${props.price}</p>
                 </div>
                 <div className="card-footer text-center">
-                    <button 
-                        onClick={() => props.cartHandler(props.price)}
+                    <Link to={'/food/'+props.id + "/" + props.name.replaceAll(" ", "-")}
                         className="btn btn-sm btn-success" 
-                    >Add To Cart</button>
+                    >view details</Link>
                 </div>
             </div>
         </div>
