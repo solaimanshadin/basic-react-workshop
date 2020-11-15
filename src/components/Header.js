@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
-import {Link, NavLink,  useHistory , useLocation } from "react-router-dom";
+import { NavLink, useHistory, useLocation } from "react-router-dom";
+import { useAuth } from '../custom_hook/useAuth';
 const Header = () => {
+    
     let history = useHistory();
     const location = useLocation();
     console.log(location);
     const [isLogged, setIsLogged]  = useState(true)
 
     function handleClick(path) {
-        if(isLogged && path === '/login') {
-             history.push('/account');
-        }else{
-            history.push(path)
-        }
+        history.push(path)
     }
-  
+    
+    const auth = useAuth();
   
     return (
         <div>
@@ -34,19 +33,27 @@ const Header = () => {
                        <li className="nav-item">
                             <NavLink  activeStyle={{borderBottom:'1px solid green'}}  to="/contact" className="nav-link">Contact us</NavLink>
                        </li>
+                       {
+                           auth.user.email ?
+                            <NavLink  activeStyle={{borderBottom:'1px solid green'}}  to="/account" className="nav-link">{auth.user?.email}</NavLink>
+                            :
+                            <>
+                                <li className="nav-item">
+                                <button 
+                                    onClick={()=>handleClick('/signup')}
+                                    className="btn btn-outline-success"
+                                >Sign up</button>
+                                </li>
+                                <li className="nav-item ml-2">
+                                        <button 
+                                            onClick={()=>handleClick('/login')}
+                                            className="btn btn-outline-success"
+                                        >Login</button>
+                                </li>
+                            </>
+                       }
 
-                       <li className="nav-item">
-                            <button 
-                                onClick={()=>handleClick('/orders')}
-                                className="btn btn-outline-success"
-                             >Order</button>
-                       </li>
-                       <li className="nav-item ml-2">
-                            <button 
-                                onClick={()=>handleClick('/login')}
-                                className="btn btn-outline-success"
-                             >Login</button>
-                       </li>
+                       
                        
                    </ul>
                    {

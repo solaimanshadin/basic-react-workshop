@@ -1,7 +1,9 @@
-import React ,{useState, useEffect}  from 'react';
-import {useParams} from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useParams } from "react-router-dom";
+import { useAuth } from '../custom_hook/useAuth';
 
 const Details = () => {
+    console.log(useAuth()); 
     const {id, slug} = useParams();
     const [product, setProduct] = useState({});
 
