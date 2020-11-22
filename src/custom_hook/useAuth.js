@@ -1,9 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/auth";
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { firebaseConfig } from '../firebase.config.js';
-
-
 
 const AuthContext = createContext();
 
@@ -26,18 +24,31 @@ export const AuthProvider = (props) => {
 const Auth = () => {
     const [user, setUser] = useState({})
 
-    
     const login = (email, password) => {
-
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then(res => {
-            setUser({email: res.user.email})
+            storeToken()
+
+
+            // 
+            sessionStorage.setItem("user", res.user.email)
+            setUser({email: res.user.email});
+            // window.history.go(-2)
         })
         .catch(err => {
                 console.log(err)
         })
        
     }
+
+    useEffect(() => {
+        const user = sessionStorage.getItem("user");
+
+        setUser({...user, email: user})
+        const currentUser = firebase.auth().currentUser;
+        console.log("currentUser", currentUser)
+    }, [])
+
     const signup = (email, password) => {
 
         firebase.auth().createUserWithEmailAndPassword(email, password)
@@ -48,6 +59,15 @@ const Auth = () => {
             console.log(err)
         })
        
+    }
+
+    const storeToken = () => {
+        firebase.auth().currentUser.getIdToken(/* forceRefresh */ true)
+        .then(function(idToken) {
+            sessionStorage.setItem("idToken", idToken)
+        }).catch(function(error) {
+            console.log("error", error)
+        });
     }
 
     return {
