@@ -1,7 +1,9 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useDispatch } from "react-redux";
 import { firebaseConfig } from '../firebase.config.js';
+import { storeUserData } from "../redux/actions/userActions.js";
 
 const AuthContext = createContext();
 
@@ -23,14 +25,17 @@ export const AuthProvider = (props) => {
 
 const Auth = () => {
     const [user, setUser] = useState({})
-
+    const dispatch = useDispatch();
+    
     const login = (email, password) => {
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then(res => {
-            storeToken()
-
-
-            // 
+            storeToken();
+            const user = { 
+                email: res.user.email
+            }
+            dispatch(storeUserData(user))
+           
             sessionStorage.setItem("user", res.user.email)
             setUser({email: res.user.email});
             // window.history.go(-2)

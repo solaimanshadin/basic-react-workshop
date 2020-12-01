@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { NavLink, useHistory, useLocation } from "react-router-dom";
 import { useAuth } from '../custom_hook/useAuth';
+import { cart } from '../redux/reducers/cart';
 const Header = () => {
     
     let history = useHistory();
@@ -13,7 +15,17 @@ const Header = () => {
     }
     
     const auth = useAuth();
-  
+
+    const userData = useSelector((state) =>  {
+        return state.user
+    } ) || {};
+
+    const cartData = useSelector((state) =>  {
+        return state.cart
+    } ) || [];
+
+    
+    console.log("cartData", cartData)
     return (
         <div>
            <nav className="navbar navbar-expand-sm navbar-light bg-light">
@@ -35,7 +47,10 @@ const Header = () => {
                        </li>
                        {
                            auth.user.email ?
-                            <NavLink  activeStyle={{borderBottom:'1px solid green'}}  to="/account" className="nav-link">{auth.user?.email}</NavLink>
+                            <NavLink  activeStyle={{borderBottom:'1px solid green'}}  to="/account" className="nav-link">
+                                {userData.email}
+
+                            </NavLink>
                             :
                             <>
                                 <li className="nav-item">
@@ -52,7 +67,10 @@ const Header = () => {
                                 </li>
                             </>
                        }
-
+                        
+                        <li className="nav-item ml-2">
+                            Cart : {cartData.length}
+                        </li>
                        
                        
                    </ul>
